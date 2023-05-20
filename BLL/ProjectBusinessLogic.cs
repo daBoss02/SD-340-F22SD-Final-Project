@@ -180,20 +180,20 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             ApplicationUser createdBy = _userManager.Users.First(u => u.UserName == userName);
             project.CreatedBy = createdBy;
 
-            await _projectRepo.Create(project);
+            Project newProject = await _projectRepo.Create(project);
 
-            userIds.ForEach(async (user) =>
+            foreach (var user in userIds)
             {
                 ApplicationUser currUser = _userManager.Users.FirstOrDefault(u => u.Id == user);
                 UserProject newUserProj = new UserProject();
                 newUserProj.ApplicationUser = currUser;
                 newUserProj.UserId = currUser.Id;
-                newUserProj.Project = project;
+                newUserProj.Project = newProject;
                 project.AssignedTo.Add(newUserProj);
                 await _userProjectRepo.Create(newUserProj);
-            });
+            };
 
-            _projectRepo.Update(project);
+            await _projectRepo.Update(newProject);
             return;
         }
 
@@ -252,15 +252,18 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             if (project != null)
             {
                 List<Ticket> tickets = project.Tickets.ToList();
-                tickets.ForEach(async ticket =>
+				tickets.ForEach(async ticket =>
                 {
+                    tickets.Remove(ticket);
                     await _ticketRepo.Delete(ticket);
+                    return;
                 });
                 IEnumerable<UserProject> allUserProjects = await _userProjectRepo.GetAll();
                 List<UserProject> userProjects = allUserProjects
                     .Where(up => up.ProjectId == project.Id).ToList();
                 userProjects.ForEach(async userProj =>
                 {
+                    project.AssignedTo.Remove(userProj);
                     await _userProjectRepo.Delete(userProj);
                 });
 
