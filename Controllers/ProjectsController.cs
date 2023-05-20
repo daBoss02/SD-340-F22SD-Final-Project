@@ -65,7 +65,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
             {
                 return BadRequest();
             }
-            _projectBLL.RemoveAssignedUser(id, projId);
+            await _projectBLL.RemoveAssignedUser(id, projId);
 
             return RedirectToAction("Edit", new { id = projId });
         }
@@ -87,7 +87,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             if (ModelState.IsValid)
             {
-                _projectBLL.Create(project, userIds);
+                await _projectBLL.Create(project, userIds);
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
@@ -120,7 +120,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
             }
             try
             {
-                _projectBLL.EditPost(id, userIds, project);
+                await _projectBLL.EditPost(id, userIds, project);
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
             catch 
@@ -150,7 +150,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _projectBLL.DeleteConfirmed(id);
+                await _projectBLL.DeleteConfirmed(id);
                 return RedirectToAction(nameof(Index));
             } catch
             {
