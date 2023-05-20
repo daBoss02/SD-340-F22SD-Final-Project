@@ -142,7 +142,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return project;
         }
 
-        public async void RemoveAssignedUser(string id, int projId)
+        public async Task RemoveAssignedUser(string id, int projId)
         {
             ICollection<UserProject> userProjects = await _userProjectRepo.GetAll();
             UserProject userProject = userProjects
@@ -169,7 +169,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return vm;
         }
 
-        public async void Create(ProjectCreateVM vm, List<string> userIds)
+        public async Task Create(ProjectCreateVM vm, List<string> userIds)
         {
             string userName = _contextAccessor.HttpContext.User.Identity.Name;
 
@@ -179,16 +179,21 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
 
             ApplicationUser createdBy = _userManager.Users.First(u => u.UserName == userName);
             project.CreatedBy = createdBy;
-            userIds.ForEach((user) =>
+
+            Project newProject = await _projectRepo.Create(project);
+
+            foreach (var user in userIds)
             {
                 ApplicationUser currUser = _userManager.Users.FirstOrDefault(u => u.Id == user);
                 UserProject newUserProj = new UserProject();
                 newUserProj.ApplicationUser = currUser;
                 newUserProj.UserId = currUser.Id;
-                newUserProj.Project = project;
+                newUserProj.Project = newProject;
                 project.AssignedTo.Add(newUserProj);
-                _userProjectRepo.Create(newUserProj);
-            });
+                await _userProjectRepo.Create(newUserProj);
+            };
+
+            await _projectRepo.Update(newProject);
             return;
         }
 
@@ -211,7 +216,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return vm;
         }
 
-        public async void EditPost(int id, List<string> userIds, ProjectEditVM projectEditVM)
+        public async Task EditPost(int id, List<string> userIds, ProjectEditVM projectEditVM)
         {
             Project project = await _projectRepo.Get(id);
 
@@ -241,25 +246,28 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return project;
         }
 
-        public async void DeleteConfirmed(int id)
+        public async Task DeleteConfirmed(int id)
         {
             Project project = await _projectRepo.Get(id);
             if (project != null)
             {
                 List<Ticket> tickets = project.Tickets.ToList();
-                tickets.ForEach(ticket =>
+				tickets.ForEach(async ticket =>
                 {
-                    _ticketRepo.Delete(ticket);
+                    tickets.Remove(ticket);
+                    await _ticketRepo.Delete(ticket);
+                    return;
                 });
                 IEnumerable<UserProject> allUserProjects = await _userProjectRepo.GetAll();
                 List<UserProject> userProjects = allUserProjects
                     .Where(up => up.ProjectId == project.Id).ToList();
-                userProjects.ForEach(userProj =>
+                userProjects.ForEach(async userProj =>
                 {
-                    _userProjectRepo.Delete(userProj);
+                    project.AssignedTo.Remove(userProj);
+                    await _userProjectRepo.Delete(userProj);
                 });
 
-                _projectRepo.Delete(project);
+                await _projectRepo.Delete(project);
             }
         }
     }

@@ -85,9 +85,9 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             ticket.Project = currProj;
             ApplicationUser owner = _userManager.Users.FirstOrDefault(u => u.Id == userId);
             ticket.Owner = owner;
-            _ticketRepo.Create(ticket);
+            await _ticketRepo.Create(ticket);
             currProj.Tickets.Add(ticket);
-            _projectRepo.Update(currProj);
+            await _projectRepo.Update(currProj);
             return ticket;
         }
 
@@ -108,7 +108,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return vm;
         }
 
-        public async void RemoveAssignedUser(string id, int ticketId)
+        public async Task RemoveAssignedUser(string id, int ticketId)
         {
             Ticket currTicket = await _ticketRepo.Get(ticketId);
             ApplicationUser currUser = await _userManager.Users.FirstAsync(u => u.Id == id);
@@ -132,7 +132,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return currTicket;
         }
 
-        public async void CommentTask(int taskId, string taskText)
+        public async Task CommentTask(int taskId, string taskText)
         {
             Comment newComment = new Comment();
             string userName = _contextAccessor.HttpContext.User.Identity.Name;
@@ -148,7 +148,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             _ticketRepo.Update(ticket);
         }
 
-        public async void UpdateHrs(int id, int hrs)
+        public async Task UpdateHrs(int id, int hrs)
         {
             Ticket ticket = await _ticketRepo.Get(id);
             ticket.RequiredHours = hrs;
@@ -156,7 +156,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             _ticketRepo.Update(ticket);
         }
 
-        public async void AddToWatchers(int id)
+        public async Task AddToWatchers(int id)
         {
             TicketWatcher newTickWatch = new TicketWatcher();
             string userName = _contextAccessor.HttpContext.User.Identity.Name;
@@ -172,7 +172,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             _ticketRepo.Update(ticket);
         }
 
-        public async void UnWatch(int id)
+        public async Task UnWatch(int id)
         {
             string userName = _contextAccessor.HttpContext.User.Identity.Name;
             ApplicationUser user = _userManager.Users.First(u => u.UserName == userName);
@@ -185,14 +185,14 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             user.TicketWatching.Remove(currTickWatch);
         }
 
-        public async void MarkAsCompleted(int id)
+        public async Task MarkAsCompleted(int id)
         {
             Ticket ticket = await _ticketRepo.Get(id);
             ticket.Completed = true;
             _ticketRepo.Update(ticket);
         }
 
-        public async void UnMarkAsCompleted(int id)
+        public async Task UnMarkAsCompleted(int id)
         {
             Ticket ticket = await _ticketRepo.Get(id);
             ticket.Completed = false;
@@ -205,7 +205,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             return ticket;
         }
 
-        public async void DeleteConfirmed(int id, int projId)
+        public async Task DeleteConfirmed(int id, int projId)
         {
             Ticket ticket = await _ticketRepo.Get(id);
             Project currProj = await _projectRepo.Get(projId);

@@ -18,11 +18,10 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
             return entity;
         }
 
-        public async Task<Comment> Delete(Comment entity)
+        public async Task Delete(Comment entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
-            return entity;
         }
 
         public async Task<Comment> Get(int id)

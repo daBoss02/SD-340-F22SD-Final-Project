@@ -19,11 +19,10 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
             return entity;
         }
 
-        public async Task<Ticket> Delete(Ticket entity)
+        public async Task Delete(Ticket entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
-            return entity;
         }
 
         public async Task<Ticket> Get(int id)

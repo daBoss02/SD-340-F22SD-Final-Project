@@ -84,7 +84,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             if (ModelState.IsValid)
             { 
-                _ticketBLL.CreatePost(ticket, projId, userId);
+                await _ticketBLL.CreatePost(ticket, projId, userId);
                 return RedirectToAction("Index","Projects", new { area = ""});
             }
             TicketCreateVM vm = await _ticketBLL.Create(projId);
@@ -115,7 +115,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
             }
             try
             {
-                _ticketBLL.RemoveAssignedUser(id, ticketId);
+                await _ticketBLL.RemoveAssignedUser(id, ticketId);
                 return RedirectToAction("Edit", new { id = ticketId });
             } catch
             {
@@ -148,7 +148,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.CommentTask(taskId, taskText);
+                await _ticketBLL.CommentTask(taskId, taskText);
                 return RedirectToAction("Details", new {id = taskId});
 
             }
@@ -162,7 +162,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.UpdateHrs(id, hrs);
+                await _ticketBLL.UpdateHrs(id, hrs);
                 return RedirectToAction("Details", new { id });
 
             }
@@ -176,7 +176,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.AddToWatchers(id);
+                await _ticketBLL.AddToWatchers(id);
                 return RedirectToAction("Details", new { id });
 
             }
@@ -190,7 +190,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.UnWatch(id);
+                await _ticketBLL.UnWatch(id);
                 return RedirectToAction("Details", new { id });
 
             }
@@ -204,7 +204,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.MarkAsCompleted(id);
+                await _ticketBLL.MarkAsCompleted(id);
                 return RedirectToAction("Details", new { id });
 
             }
@@ -218,7 +218,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.UnMarkAsCompleted(id);
+                await _ticketBLL.UnMarkAsCompleted(id);
                 return RedirectToAction("Details", new { id });
 
             }
@@ -251,7 +251,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                _ticketBLL.DeleteConfirmed(id, projId);
+                await _ticketBLL.DeleteConfirmed(id, projId);
             } catch
             {
                 return Problem("Entity set 'ApplicationDbContext.Tickets'  is null.");
