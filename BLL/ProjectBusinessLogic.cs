@@ -252,20 +252,20 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             if (project != null)
             {
                 List<Ticket> tickets = project.Tickets.ToList();
-				tickets.ForEach(async ticket =>
+				foreach(var ticket in tickets)
                 {
                     tickets.Remove(ticket);
                     await _ticketRepo.Delete(ticket);
                     return;
-                });
+                };
                 IEnumerable<UserProject> allUserProjects = await _userProjectRepo.GetAll();
                 List<UserProject> userProjects = allUserProjects
                     .Where(up => up.ProjectId == project.Id).ToList();
-                userProjects.ForEach(async userProj =>
+                foreach (var userProj in userProjects)
                 {
                     project.AssignedTo.Remove(userProj);
                     await _userProjectRepo.Delete(userProj);
-                });
+                };
 
                 await _projectRepo.Delete(project);
             }
