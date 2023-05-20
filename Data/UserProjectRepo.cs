@@ -36,11 +36,10 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
             return entity;
         }
 
-        public async Task<UserProject> Delete(UserProject entity)
+        public async Task Delete(UserProject entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
-            return entity;
         }
 
         public async Task<ICollection<UserProject>> GetAll()

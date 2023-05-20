@@ -138,7 +138,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
                 return View(await _projectBLL.DeleteGet((int)id));
             } catch
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
         }
 
@@ -151,7 +151,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
             try
             {
                 await _projectBLL.DeleteConfirmed(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             } catch
             {
                 return NotFound();

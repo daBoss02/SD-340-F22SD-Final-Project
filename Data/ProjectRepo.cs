@@ -42,11 +42,10 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
             return entity;
         }
 
-        public async Task<Project> Delete(Project entity)
+        public async Task Delete(Project entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
-            return entity;
         }
 
         public async Task<ICollection<Project>> GetAll()

@@ -13,7 +13,7 @@
             public Task<T> Update(T entity);
 
             // DELETE
-            public Task<T> Delete(T entity);
+            public Task Delete(T entity);
         }
 
 }
