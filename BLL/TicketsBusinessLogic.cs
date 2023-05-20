@@ -114,7 +114,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             ApplicationUser currUser = await _userManager.Users.FirstAsync(u => u.Id == id);
             //To be fixed ASAP
             currTicket.Owner = currUser;
-            _ticketRepo.Update(currTicket);
+            await _ticketRepo.Update(currTicket);
         }
 
         public async Task<Ticket> EditPost(int id, string userId, Ticket ticket)
